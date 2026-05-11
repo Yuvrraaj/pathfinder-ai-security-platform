@@ -19,7 +19,7 @@ This review identifies a gap at the intersection: an **intelligence layer** that
 - **What**: Autonomous white-box AI pentester for web apps/APIs
 - **Strength**: 96.15% on XBOW benchmark, Claude-powered, source-aware exploitation
 - **Limitation**: Requires source code access, black-box to user, trust concerns
-- **Gap**: Doesn't show reasoning, no business context, full autonomy raises enterprise concerns
+- **Gap**: Limited explainability and enterprise trust concerns around autonomous operation.
 
 ### PentAGI (VXControl)
 - **What**: Multi-agent AI penetration testing system
