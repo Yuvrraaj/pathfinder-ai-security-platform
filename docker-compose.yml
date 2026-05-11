@@ -1,0 +1,121 @@
+# PathFinder Docker Compose Configuration
+# Includes vulnerable lab environments for testing
+
+services:
+  # ===========================================================================
+  # PathFinder Service
+  # ===========================================================================
+  pathfinder:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: pathfinder:latest
+    container_name: pathfinder
+    networks:
+      - vuln-lab
+    volumes:
+      # Persistent storage for PathFinder data
+      - ./output:/home/pathfinder/.pathfinder
+      # Reports output directory
+      - ./reports:/reports
+      # Nuclei templates (named volume for persistence)
+      - nuclei-templates:/home/pathfinder/.local/nuclei-templates
+    tmpfs:
+      # Ephemeral config directory for nuclei
+      - /home/pathfinder/.config:uid=1000,gid=1000,mode=755
+    # Note: Create .env from .env.example if needed (optional)
+    # env_file: .env  # Uncomment if you have a .env file
+    environment:
+      - GROQ_API_KEY=${GROQ_API_KEY:-}
+    deploy:
+      resources:
+        limits:
+          cpus: "${PATHFINDER_CPU_LIMIT:-2}"
+          memory: "${PATHFINDER_MEM_LIMIT:-2G}"
+    stdin_open: true
+    tty: true
+
+  # ===========================================================================
+  # Vulnerable Lab: OWASP Juice Shop
+  # Modern JavaScript vulnerable application
+  # ===========================================================================
+  juice-shop:
+    image: bkimminich/juice-shop:latest
+    container_name: juice-shop
+    profiles:
+      - labs
+    networks:
+      - vuln-lab
+    ports:
+      - "3000:3000"
+    healthcheck:
+      test: ["CMD", "wget", "-q", "--spider", "http://localhost:3000"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 30s
+    deploy:
+      resources:
+        limits:
+          cpus: "${LAB_CPU_LIMIT:-1}"
+          memory: "${LAB_MEM_LIMIT:-512M}"
+
+  # ===========================================================================
+  # Vulnerable Lab: Damn Vulnerable Web Application (DVWA)
+  # Classic PHP vulnerable application
+  # ===========================================================================
+  dvwa:
+    image: vulnerables/web-dvwa:latest
+    container_name: dvwa
+    profiles:
+      - labs
+    networks:
+      - vuln-lab
+    ports:
+      - "8081:80"
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost/"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+    deploy:
+      resources:
+        limits:
+          cpus: "${LAB_CPU_LIMIT:-1}"
+          memory: "${LAB_MEM_LIMIT:-512M}"
+
+  # ===========================================================================
+  # Vulnerable Lab: WebGoat
+  # OWASP educational vulnerable application
+  # ===========================================================================
+  webgoat:
+    image: webgoat/webgoat:latest
+    container_name: webgoat
+    profiles:
+      - labs
+    networks:
+      - vuln-lab
+    ports:
+      - "8080:8080"
+      - "9090:9090"
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/WebGoat"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 180s
+    deploy:
+      resources:
+        limits:
+          cpus: "${LAB_CPU_LIMIT:-2}"
+          memory: "${LAB_MEM_LIMIT:-1G}"
+
+networks:
+  vuln-lab:
+    driver: bridge
+    name: vuln-lab
+
+volumes:
+  nuclei-templates:
+    name: pathfinder-nuclei-templates

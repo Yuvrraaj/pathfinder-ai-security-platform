@@ -1,0 +1,54 @@
+# Git
+.git
+.gitignore
+
+# Python artifacts
+.venv
+__pycache__
+*.py[cod]
+*$py.class
+*.so
+.pytest_cache
+.mypy_cache
+.ruff_cache
+.coverage
+htmlcov
+.tox
+.nox
+
+# Build artifacts
+build
+dist
+*.egg-info
+wheels
+
+# Documentation (except README needed for build)
+docs/
+*.md
+!README.md
+
+# Environment and secrets
+.env
+.env.*
+!.env.example
+
+# Output directories
+output/
+reports/
+
+# IDE and editor files
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# Docker files (don't need to copy themselves)
+Dockerfile*
+docker-compose*.yml
+.dockerignore
+
+# Misc
+*.log
+.DS_Store
+Thumbs.db
