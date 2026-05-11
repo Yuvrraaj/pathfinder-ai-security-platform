@@ -276,34 +276,6 @@ Built for RedHold Engineering Assignment • May 2026
 
 
 
-Option 1: E2E (automatic scan + ingest)
-  cd /mnt/Z/Stuff/GitHub/redhold/pathfinder
-  make scan TARGET="http://juice-shop:3000"
-  This runs Nuclei against Juice Shop and automatically ingests the results into PathFinder's analysis pipeline.
-
-  Option 2: Plugin Mode (manual Nuclei, then ingest)
-
-  If you want to run Nuclei manually first:
-  # Shell into the PathFinder container
-  make shell
-  
-  # Run Nuclei manually (inside container)
-  nuclei -u http://juice-shop:3000 -json -o /home/pathfinder/.pathfinder/juice-shop-scan.json
-
-  # Shell into the PathFinder container
-  make shell
-
-  # Run Nuclei manually (inside container)
-  # Run Nuclei manually (inside container)
-  nuclei -u http://juice-shop:3000 -json -o /home/pathfinder/.pathfinder/juice-shop-scan.json
-
-  # Then ingest
-  pathfinder ingest /home/pathfinder/.pathfinder/juice-shop-scan.json
-  pathfinder analyze
-
-  Or there's a shortcut target:
-  make scan-juice-shop
-  This starts labs if needed, waits for healthcheck, then runs the full scan.
 
   To generate a report after ingestion:
   make run CMD="analyze --output /home/pathfinder/.pathfinder/juice-shop-report.html"
