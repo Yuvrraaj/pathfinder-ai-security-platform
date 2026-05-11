@@ -252,7 +252,7 @@ PathFinder's positioning:
 
 ## Limitations
 
-- AI analysis requires ANTHROPIC_API_KEY (falls back to heuristics without it)
+- AI analysis requires GROQ_API_KEY (falls back to heuristics without it)
 - Attack path synthesis quality depends on finding density
 - External tools (subfinder, httpx, nuclei) provide better results but have fallbacks
 - Tested primarily against web application attack surfaces
@@ -273,11 +273,3 @@ MIT
 ---
 
 Built for RedHold Engineering Assignment • May 2026
-
-
-
-
-  To generate a report after ingestion:
-  make run CMD="analyze --output /home/pathfinder/.pathfinder/juice-shop-report.html"
-
-  Which approach do you want to use?
